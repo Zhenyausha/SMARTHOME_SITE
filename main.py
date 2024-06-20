@@ -15,6 +15,7 @@ class User(db.Model):
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
     mail = db.Column(db.String(200), nullable=False)
+    last_action = db.Column(db.String(200), nullable=True)  # Новый столбец
 
 @app.route('/')
 def index():
@@ -30,7 +31,6 @@ def login():
             return jsonify({'token': token})
         return 'Неправильное имя пользователя или пароль', 401
     return render_template('login.html')
-
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -52,6 +52,8 @@ def token_required(f):
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
             current_user = User.query.filter_by(username=data['username']).first()
+            current_user.last_action = request.path
+            db.session.commit()
         except:
             return 'Неправильный токен', 403
         return f(current_user, *args, **kwargs)
@@ -60,7 +62,6 @@ def token_required(f):
 @app.route('/livingroom/curtains', endpoint='livingroom_curtains')
 @token_required
 def livingroom_curtains(current_user):
-    # You can now use current_user to identify the user
     print(f'{current_user.username} accessed livingroom_curtains')
     return redirect(url_for('index'))
 
@@ -111,6 +112,26 @@ def room_light(current_user):
 def room_kettle(current_user):
     print(f'{current_user.username} accessed room_kettle')
     return redirect(url_for('index'))
+
+@app.route('/api/user_last_action', methods=['POST'])
+def user_last_action():
+    data = request.json
+    if 'jwt' in data:
+        try:
+            token_data = jwt.decode(data['jwt'], app.config['SECRET_KEY'], algorithms=["HS256"])
+            user = User.query.filter_by(username=token_data['username']).first()
+        except:
+            return jsonify({'error': 'Invalid token'}), 403
+    elif 'mail' in data:
+        user = User.query.filter_by(mail=data['mail']).first()
+    elif 'username' in data:
+        user = User.query.filter_by(username=data['username']).first()
+    else:
+        return jsonify({'error': 'No valid identifier provided'}), 400
+
+    if user:
+        return jsonify({'last_action': user.last_action})
+    return jsonify({'error': 'User not found'}), 404
 
 if __name__ == '__main__':
     with app.app_context():
