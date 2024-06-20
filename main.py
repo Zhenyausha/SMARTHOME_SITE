@@ -14,6 +14,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
+    mail = db.Column(db.String(200), nullable=False)
 
 @app.route('/')
 def index():
@@ -36,7 +37,7 @@ def register():
     if request.method == 'POST':
         data = request.form
         hashed_password = generate_password_hash(data['password'], method='pbkdf2:sha256')
-        new_user = User(username=data['username'], password=hashed_password)
+        new_user = User(username=data['username'], password=hashed_password, mail=data['mail'])
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('login'))
