@@ -9,33 +9,55 @@
     <div id="header">
         <h1>Панель управления</h1>
         <button id="register" onclick="location.href='/register'">РЕГИСТРАЦИЯ</button>
-        <button id="register" onclick="location.href='/login'">ВХОД</button>
+        <button id="login" onclick="location.href='/login'">ВХОД</button>
     </div>
 
     <div id="livingroom">
         <h2>Гостиная</h2>
-        <button id="curtains" onclick="location.href='/livingroom/curtains'">Шторы</button>
-        <button id="light" onclick="location.href='/livingroom/light'">Свет</button>
-        <button id="radiator" onclick="location.href='/livingroom/radiator'">Радиатор</button>
+        <button id="curtains" onclick="controlDevice('/livingroom/curtains')">Шторы</button>
+        <button id="light" onclick="controlDevice('/livingroom/light')">Свет</button>
+        <button id="radiator" onclick="controlDevice('/livingroom/radiator')">Радиатор</button>
     </div>
     <div id="greenhouse">
         <h2>Оранжерея</h2>
-        <button id="watering" onclick="location.href='/greenhouse/watering'">Полив</button>
+        <button id="watering" onclick="controlDevice('/greenhouse/watering')">Полив</button>
     </div>
-    <div
-    id="balcony">
+    <div id="balcony">
         <h2>Балкон</h2>
-        <button id="balcony_light" onclick="location.href='/balcony/light'">Подсветка</button>
+        <button id="balcony_light" onclick="controlDevice('/balcony/light')">Подсветка</button>
     </div>
     <div id="bedroom">
         <h2>Спальня</h2>
-        <button id="bedroom_light" onclick="location.href='/bedroom/light'">Подсветка</button>
-        <button id="bedroom_lightmusic" onclick="location.href='/bedroom/lightmusic'">Светомузыка</button>
+        <button id="bedroom_light" onclick="controlDevice('/bedroom/light')">Подсветка</button>
+        <button id="bedroom_lightmusic" onclick="controlDevice('/bedroom/lightmusic')">Светомузыка</button>
     </div>
     <div id="room">
         <h2>Комната</h2>
-        <button id="room_light" onclick="location.href='/room/light'">Свет</button>
-        <button id="room_kettle" onclick="location.href='/room/kettle'">Чайник</button>
+        <button id="room_light" onclick="controlDevice('/room/light')">Свет</button>
+        <button id="room_kettle" onclick="controlDevice('/room/kettle')">Чайник</button>
     </div>
+
+    <script>
+        function controlDevice(endpoint) {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Please log in first');
+                return;
+            }
+
+            fetch(endpoint, {
+                method: 'GET',
+                headers: {
+                    'x-access-token': token
+                }
+            }).then(response => {
+                if (response.ok) {
+                    //alert('Device controlled successfully');//
+                } else {
+                    alert('Failed to control device');
+                }
+            });
+        }
+    </script>
 </body>
 </html>

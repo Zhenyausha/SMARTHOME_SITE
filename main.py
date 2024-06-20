@@ -27,10 +27,10 @@ def login():
         user = User.query.filter_by(username=data['username']).first()
         if user and check_password_hash(user.password, data['password']):
             token = jwt.encode({'username': user.username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'], algorithm='HS256')
-            #return jsonify({'token': token})
-            return redirect(url_for('index'))
+            return jsonify({'token': token})
         return 'Неправильное имя пользователя или пароль', 401
     return render_template('login.html')
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -60,46 +60,56 @@ def token_required(f):
 @app.route('/livingroom/curtains', endpoint='livingroom_curtains')
 @token_required
 def livingroom_curtains(current_user):
+    # You can now use current_user to identify the user
+    print(f'{current_user.username} accessed livingroom_curtains')
     return redirect(url_for('index'))
 
 @app.route('/livingroom/light', endpoint='livingroom_light')
 @token_required
 def livingroom_light(current_user):
+    print(f'{current_user.username} accessed livingroom_light')
     return redirect(url_for('index'))
 
 @app.route('/livingroom/radiator', endpoint='livingroom_radiator')
 @token_required
 def livingroom_radiator(current_user):
+    print(f'{current_user.username} accessed livingroom_radiator')
     return redirect(url_for('index'))
 
 @app.route('/greenhouse/watering', endpoint='greenhouse_watering')
 @token_required
 def greenhouse_watering(current_user):
+    print(f'{current_user.username} accessed greenhouse_watering')
     return redirect(url_for('index'))
 
 @app.route('/balcony/light', endpoint='balcony_light')
 @token_required
 def balcony_light(current_user):
+    print(f'{current_user.username} accessed balcony_light')
     return redirect(url_for('index'))
 
 @app.route('/bedroom/light', endpoint='bedroom_light')
 @token_required
 def bedroom_light(current_user):
+    print(f'{current_user.username} accessed bedroom_light')
     return redirect(url_for('index'))
 
 @app.route('/bedroom/lightmusic', endpoint='bedroom_lightmusic')
 @token_required
 def bedroom_lightmusic(current_user):
+    print(f'{current_user.username} accessed bedroom_lightmusic')
     return redirect(url_for('index'))
 
 @app.route('/room/light', endpoint='room_light')
 @token_required
 def room_light(current_user):
+    print(f'{current_user.username} accessed room_light')
     return redirect(url_for('index'))
 
 @app.route('/room/kettle', endpoint='room_kettle')
 @token_required
 def room_kettle(current_user):
+    print(f'{current_user.username} accessed room_kettle')
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
