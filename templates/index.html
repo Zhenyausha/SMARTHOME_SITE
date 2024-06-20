@@ -1,35 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control Panel</title>
+    <title>Панель управления</title>
 </head>
 <body>
-    <h1>Control Panel</h1>
-    <div>
-        <h2>Living Room</h2>
-        <button onclick="location.href='/livingroom/curtains'">Curtains</button>
-        <button onclick="location.href='/livingroom/light'">Light</button>
-        <button onclick="location.href='/livingroom/radiator'">Radiator</button>
+    <h1>Панель управления</h1>
+    <div id="livingroom">
+        <h2>Гостиная</h2>
+        <button id="curtains" onclick="location.href='/livingroom/curtains'">Шторы</button>
+        <button id="light" onclick="location.href='/livingroom/light'">Свет</button>
+        <button id="radiator" onclick="location.href='/livingroom/radiator'">Радиатор</button>
     </div>
-    <div>
-        <h2>Greenhouse</h2>
-        <button onclick="location.href='/greenhouse/watering'">Watering</button>
+    <div id="greenhouse">
+        <h2>Оранжерея</h2>
+        <button id="watering" onclick="location.href='/greenhouse/watering'">Полив</button>
     </div>
-    <div>
-        <h2>Balcony</h2>
-        <button onclick="location.href='/balcony/light'">Light</button>
+    <div
+    id="balcony">
+        <h2>Балкон</h2>
+        <button id="balcony_light" onclick="location.href='/balcony/light'">Подсветка</button>
     </div>
-    <div>
-        <h2>Bedroom</h2>
-        <button onclick="location.href='/bedroom/light'">Light</button>
-        <button onclick="location.href='/bedroom/lightmusic'">Light Music</button>
+    <div id="bedroom">
+        <h2>Спальня</h2>
+        <button id="bedroom_light" onclick="location.href='/bedroom/light'">Подсветка</button>
+        <button id="bedroom_lightmusic" onclick="location.href='/bedroom/lightmusic'">Светомузыка</button>
     </div>
-    <div>
-        <h2>Room</h2>
-        <button onclick="location.href='/room/light'">Light</button>
-        <button onclick="location.href='/room/kettle'">Kettle</button>
+    <div id="room">
+        <h2>Комната</h2>
+        <button id="room_light" onclick="location.href='/room/light'">Свет</button>
+        <button id="room_kettle" onclick="location.href='/room/kettle'">Чайник</button>
     </div>
 </body>
 </html>
