@@ -58,6 +58,9 @@ def token_required(f):
             return 'Неправильный токен', 403
         return f(current_user, *args, **kwargs)
     return wrap
+@app.route('/jwt')
+def jwt():
+    return redirect(url_for('index'))
 
 @app.route('/livingroom/curtains', endpoint='livingroom_curtains')
 @token_required
@@ -136,4 +139,4 @@ def user_last_action():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True)

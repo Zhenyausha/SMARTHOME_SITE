@@ -41,7 +41,7 @@
         function controlDevice(endpoint) {
             const token = localStorage.getItem('token');
             if (!token) {
-                alert('Please log in first');
+                alert('Пожалуйста сначала ВОЙДИТЕ в систему');
                 return;
             }
 
@@ -54,7 +54,7 @@
                 if (response.ok) {
                     //alert('Device controlled successfully');//
                 } else {
-                    alert('Failed to control device');
+                    alert('Не удалось авторизироваться. \n попробуйте ВОЙТИ');
                 }
             });
         }

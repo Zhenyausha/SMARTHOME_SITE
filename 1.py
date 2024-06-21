@@ -6,7 +6,7 @@ base_url = 'http://localhost:5000'
 # Информация для идентификации пользователя
 jwt_token = 'YOUR_JWT_TOKEN'
 mail = 'zhena777'
-username='username'
+username='www'
 # Заголовки для запроса
 headers = {
     'Content-Type': 'application/json',
@@ -16,8 +16,8 @@ headers = {
 # Данные для идентификации пользователя
 data = {
     # 'jwt': jwt_token,  # Используйте это, если хотите аутентифицироваться через JWT
-    'mail': mail,
-    # 'username': username  # Используйте это, если хотите аутентифицироваться через username
+    #'mail': mail,
+    'username': username  # Используйте это, если хотите аутентифицироваться через username
 }
 
 # Отправка POST запроса
