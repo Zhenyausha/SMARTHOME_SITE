@@ -15,10 +15,7 @@ class User(db.Model):
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
     mail = db.Column(db.String(200), nullable=False)
-    last_action = db.Column(db.String(200), nullable=True)
-    curtain_time = db.Column(db.String(200), nullable=True)
-    watering_time = db.Column(db.String(200), nullable=True)
-    temperature = db.Column(db.String(200), nullable=True)
+    last_action = db.Column(db.String(200), nullable=True)  # Новый столбец
 
 @app.route('/')
 def index():
@@ -61,24 +58,9 @@ def token_required(f):
             return 'Неправильный токен', 403
         return f(current_user, *args, **kwargs)
     return wrap
-
-
-@app.route('/token', methods=['POST'])
-def get_token():
-    data = request.json
-    username = data.get('username')
-    password = data.get('password')
-
-    if not username or not password:
-        return jsonify({'error': 'Missing username or password'}), 400
-
-    user = User.query.filter_by(username=username).first()
-    if user and check_password_hash(user.password, password):
-        token = jwt.encode({'username': user.username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'], algorithm='HS256')
-        return jsonify({'token': token})
-    return jsonify({'error': 'Invalid username or password'}), 401
-
-
+@app.route('/jwt')
+def jwt():
+    return redirect(url_for('index'))
 
 @app.route('/livingroom/curtains', endpoint='livingroom_curtains')
 @token_required
@@ -134,44 +116,6 @@ def room_kettle(current_user):
     print(f'{current_user.username} accessed room_kettle')
     return redirect(url_for('index'))
 
-@app.route('/api/user_settings', methods=['GET'])
-def get_user_settings():
-    username = request.args.get('username')
-    user = User.query.filter_by(username=username).first()
-    if user:
-        return jsonify({
-            'curtain_time': user.curtain_time,
-            'watering_time': user.watering_time,
-            'temperature': user.temperature
-        })
-    return jsonify({'error': 'User not found'}), 404
-
-@app.route('/api/user_settings', methods=['POST'])
-def set_user_settings():
-    data = request.json
-    token = data.get('jwt')
-    curtain_time = data.get('curtain_time')
-    watering_time = data.get('watering_time')
-    temperature = data.get('temperature')
-
-    if token:
-        try:
-            token_data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
-            user = User.query.filter_by(username=token_data['username']).first()
-        except:
-            return jsonify({'error': 'Invalid token'}), 403
-
-        if user:
-            if curtain_time:
-                user.curtain_time = curtain_time
-            if watering_time:
-                user.watering_time = watering_time
-            if temperature:
-                user.temperature = temperature
-            db.session.commit()
-            return jsonify({'message': 'Settings updated successfully'})
-    return jsonify({'error': 'Invalid data'}), 400
-
 @app.route('/api/user_last_action', methods=['POST'])
 def user_last_action():
     data = request.json
@@ -195,4 +139,4 @@ def user_last_action():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True)
