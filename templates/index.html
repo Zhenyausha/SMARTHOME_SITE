@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Панель управления</title>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
 </head>
 <body>
     <div id="header">
         <h1>Панель управления</h1>
         <button id="register" onclick="location.href='/register'">РЕГИСТРАЦИЯ</button>
         <button id="login" onclick="location.href='/login'">ВХОД</button>
+        <button id="token" onclick="location.href='/token'">ПОЛУЧИТЬ ТОКЕН (пока доеснт ворк)</button>
     </div>
 
     <div id="livingroom">
@@ -103,7 +105,15 @@
         }
 
         function getTemperature() {
-            const username = 'your_username'; // Replace with the actual username or get it dynamically
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Пожалуйста сначала ВОЙДИТЕ в систему');
+                return;
+            }
+
+            const decodedToken = jwt_decode(token);
+            const username = decodedToken.username;
+
             fetch(`/api/user_settings?username=${username}`)
                 .then(response => response.json())
                 .then(data => {
@@ -113,8 +123,8 @@
                 });
         }
 
-        // Call this function to get the temperature on page load
-        getTemperature();
+        // Вызов функции для получения температуры при загрузке страницы
+        window.onload = getTemperature;
     </script>
 </body>
 </html>

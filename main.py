@@ -62,6 +62,24 @@ def token_required(f):
         return f(current_user, *args, **kwargs)
     return wrap
 
+
+@app.route('/token', methods=['POST'])
+def get_token():
+    data = request.json
+    username = data.get('username')
+    password = data.get('password')
+
+    if not username or not password:
+        return jsonify({'error': 'Missing username or password'}), 400
+
+    user = User.query.filter_by(username=username).first()
+    if user and check_password_hash(user.password, password):
+        token = jwt.encode({'username': user.username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'], algorithm='HS256')
+        return jsonify({'token': token})
+    return jsonify({'error': 'Invalid username or password'}), 401
+
+
+
 @app.route('/livingroom/curtains', endpoint='livingroom_curtains')
 @token_required
 def livingroom_curtains(current_user):

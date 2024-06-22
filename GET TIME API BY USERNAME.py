@@ -6,10 +6,13 @@ def get_user_settings(username):
     
     if response.status_code == 200:
         data = response.json()
-        curtain_time = data.get('curtain_time', 'Not set')
-        watering_time = data.get('watering_time', 'Not set')
-        print(f"Curtain Closing Time: {curtain_time}")
-        print(f"Greenhouse Watering Time: {watering_time}")
+        if 'error' in data:
+            print(f"Error: {data['error']}")
+        else:
+            curtain_time = data.get('curtain_time', 'Not set')
+            watering_time = data.get('watering_time', 'Not set')
+            print(f"Curtain Closing Time: {curtain_time}")
+            print(f"Greenhouse Watering Time: {watering_time}")
     else:
         print(f"Error: {response.status_code}, {response.json().get('error')}")
 
