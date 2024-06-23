@@ -11,7 +11,7 @@
         <h1>Панель управления</h1>
         <button id="register" onclick="location.href='/register'">РЕГИСТРАЦИЯ</button>
         <button id="login" onclick="location.href='/login'">ВХОД</button>
-        <button id="token" onclick="location.href='/token'">ПОЛУЧИТЬ ТОКЕН (пока доеснт ворк)</button>
+        <button id="token" onclick="location.href='/token'">ПОЛУЧИТЬ ТОКЕН (пока не работает)</button>
     </div>
 
     <div id="livingroom">
@@ -24,6 +24,7 @@
             <input type="text" id="curtain_time" name="curtain_time">
         </div>
     </div>
+
     <div id="greenhouse">
         <h2>Оранжерея</h2>
         <button id="watering" onclick="controlDevice('/greenhouse/watering')">Полив</button>
@@ -32,53 +33,39 @@
             <input type="text" id="watering_time" name="watering_time">
         </div>
     </div>
+
     <div id="balcony">
         <h2>Балкон</h2>
-        <button id="balcony_light" onclick="controlDevice('/balcony/light')">Подсветка</button>
+        <button onclick="location.href='/balcony/light'">Свет</button>
     </div>
+
     <div id="bedroom">
         <h2>Спальня</h2>
-        <button id="bedroom_light" onclick="controlDevice('/bedroom/light')">Подсветка</button>
-        <button id="bedroom_lightmusic" onclick="controlDevice('/bedroom/lightmusic')">Светомузыка</button>
+        <button onclick="location.href='/bedroom/light'">Свет</button>
+        <button onclick="location.href='/bedroom/lightmusic'">Светомузыка</button>
     </div>
+
     <div id="room">
         <h2>Комната</h2>
-        <button id="room_light" onclick="controlDevice('/room/light')">Свет</button>
-        <button id="room_kettle" onclick="controlDevice('/room/kettle')">Чайник</button>
-    </div>
-    <div id="temperature">
-        <h2>Температура в доме</h2>
-        <p id="temperature_display">Температура: -- °C</p>
+        <button onclick="location.href='/room/light'">Свет</button>
+        <button onclick="location.href='/room/kettle'">Чайник</button>
     </div>
 
-    <button onclick="saveSettings()">Сохранить настройки</button>
+    <div id="temperature">
+        <h2>Температура и Влажность в доме</h2>
+        <p id="temperature_display">Температура: -- °C</p>
+        <p id="humidity_display">Влажность: -- %</p>
+    </div>
+
+    <div id="user-settings">
+        <button onclick="saveSettings()">Сохранить настройки</button>
+    </div>
 
     <script>
-        function controlDevice(endpoint) {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                alert('Пожалуйста сначала ВОЙДИТЕ в систему');
-                return;
-            }
-
-            fetch(endpoint, {
-                method: 'GET',
-                headers: {
-                    'x-access-token': token
-                }
-            }).then(response => {
-                if (response.ok) {
-                    //alert('Device controlled successfully');
-                } else {
-                    alert('Не удалось авторизироваться. \n попробуйте ВОЙТИ');
-                }
-            });
-        }
-
         function saveSettings() {
             const token = localStorage.getItem('token');
             if (!token) {
-                alert('Пожалуйста сначала ВОЙДИТЕ в систему');
+                alert('Пожалуйста, сначала ВОЙДИТЕ в систему');
                 return;
             }
 
@@ -107,7 +94,7 @@
         function getTemperature() {
             const token = localStorage.getItem('token');
             if (!token) {
-                alert('Пожалуйста сначала ВОЙДИТЕ в систему');
+                alert('Пожалуйста, сначала ВОЙДИТЕ в систему');
                 return;
             }
 
@@ -120,10 +107,13 @@
                     if (data.temperature) {
                         document.getElementById('temperature_display').textContent = `Температура: ${data.temperature} °C`;
                     }
+                    if (data.humidity) {
+                        document.getElementById('humidity_display').textContent = `Влажность: ${data.humidity} %`;
+                    }
                 });
         }
 
-        // Вызов функции для получения температуры при загрузке страницы
+        // Вызов функции для получения температуры и влажности при загрузке страницы
         window.onload = getTemperature;
     </script>
 </body>
