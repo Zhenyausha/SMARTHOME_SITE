@@ -18,8 +18,9 @@ class User(db.Model):
     last_action = db.Column(db.String(200), nullable=True)
     curtain_time = db.Column(db.String(200), nullable=True)
     watering_time = db.Column(db.String(200), nullable=True)
-    temperature = db.Column(db.String(200), nullable=True)
-    humidity = db.Column(db.String(200), nullable=True)  # Added humidity field
+    temperature = db.Column(db.String(200), nullable=True, default='100')
+    humidity = db.Column(db.String(200), nullable=True, default="100")  # New field
+
 
 @app.route('/')
 def index():
@@ -31,7 +32,7 @@ def login():
         data = request.form
         user = User.query.filter_by(username=data['username']).first()
         if user and check_password_hash(user.password, data['password']):
-            token = jwt.encode({'username': user.username, 'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'], algorithm='HS256')
+            token = jwt.encode({'username': user.username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'], algorithm='HS256')
             return jsonify({'token': token})
         return 'Неправильное имя пользователя или пароль', 401
     return render_template('login.html')
@@ -63,6 +64,7 @@ def token_required(f):
         return f(current_user, *args, **kwargs)
     return wrap
 
+
 @app.route('/token', methods=['POST'])
 def get_token():
     data = request.json
@@ -74,9 +76,11 @@ def get_token():
 
     user = User.query.filter_by(username=username).first()
     if user and check_password_hash(user.password, password):
-        token = jwt.encode({'username': user.username, 'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'], algorithm='HS256')
+        token = jwt.encode({'username': user.username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'], algorithm='HS256')
         return jsonify({'token': token})
     return jsonify({'error': 'Invalid username or password'}), 401
+
+
 
 @app.route('/livingroom/curtains', endpoint='livingroom_curtains')
 @token_required
@@ -141,7 +145,7 @@ def get_user_settings():
             'curtain_time': user.curtain_time,
             'watering_time': user.watering_time,
             'temperature': user.temperature,
-            'humidity': user.humidity  # Added humidity field in response
+            'humidity': user.humidity  # New field
         })
     return jsonify({'error': 'User not found'}), 404
 
@@ -152,7 +156,7 @@ def set_user_settings():
     curtain_time = data.get('curtain_time')
     watering_time = data.get('watering_time')
     temperature = data.get('temperature')
-    humidity = data.get('humidity')  # Added humidity field in request
+    humidity = data.get('humidity')
 
     if token:
         try:
@@ -161,7 +165,7 @@ def set_user_settings():
         except:
             return jsonify({'error': 'Invalid token'}), 403
 
-        if user:
+        if user:    
             if curtain_time:
                 user.curtain_time = curtain_time
             if watering_time:
@@ -173,6 +177,8 @@ def set_user_settings():
             db.session.commit()
             return jsonify({'message': 'Settings updated successfully'})
     return jsonify({'error': 'Invalid data'}), 400
+
+
 
 @app.route('/api/user_last_action', methods=['POST'])
 def user_last_action():
