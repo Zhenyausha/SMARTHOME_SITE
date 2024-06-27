@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Панель управления</title>
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
 </head>
 <body>
     <div id="header">
@@ -21,7 +23,7 @@
         <button id="radiator" onclick="controlDevice('/livingroom/radiator')">Радиатор</button>
         <div>
             <label for="curtain_time">Время закрытия штор:</label>
-            <input type="text" id="curtain_time" name="curtain_time">
+            <input type="time" id="curtain_time" name="curtain_time">
         </div>
     </div>
     <div id="greenhouse">
@@ -29,7 +31,7 @@
         <button id="watering" onclick="controlDevice('/greenhouse/watering')">Полив</button>
         <div>
             <label for="watering_time">Время полива растений:</label>
-            <input type="text" id="watering_time" name="watering_time">
+            <input type="time" id="watering_time" name="watering_time">
         </div>
     </div>
     <div id="balcony">

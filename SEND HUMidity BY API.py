@@ -25,6 +25,6 @@ def send_temperature(username, temperature, secret_key):
 
 if __name__ == "__main__":
     username = input("Enter the username: ")
-    temperature = input("Enter the current temperature: ")
+    temperature = input("Enter the current humidity(vlaszhnost): ")
     secret_key = 'your_secret_key'  # Replace with your actual secret key
     send_temperature(username, temperature, secret_key)
