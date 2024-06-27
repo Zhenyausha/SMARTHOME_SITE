@@ -11,9 +11,12 @@
 <body>
     <div id="header">
         <h1>Панель управления</h1>
-        <button id="register" onclick="location.href='/register'">РЕГИСТРАЦИЯ</button>
+        <div id="actionbut">
+                    <button id="register" onclick="location.href='/register'">РЕГИСТРАЦИЯ</button>
         <button id="login" onclick="location.href='/login'">ВХОД</button>
         <button id="token" onclick="location.href='/token'">ПОЛУЧИТЬ ТОКЕН (пока доеснт ворк)</button>
+        </div>
+
     </div>
 
     <div id="livingroom">
@@ -54,7 +57,10 @@
         <p id="humidity_display">Влажность: -- %</p>
     </div>
 
-    <button onclick="saveSettings()">Сохранить настройки</button>
+    <div id="saveset">
+        <button id="save_button" onclick="saveSettings()">Сохранить настройки</button>
+    </div>
+    
 
     <script>
         function controlDevice(endpoint) {
