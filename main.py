@@ -18,7 +18,9 @@ class User(db.Model):
     last_action = db.Column(db.String(200), nullable=True)
     curtain_time = db.Column(db.String(200), nullable=True)
     watering_time = db.Column(db.String(200), nullable=True)
-    temperature = db.Column(db.String(200), nullable=True)
+    temperature = db.Column(db.String(200), nullable=True, default='100')
+    humidity = db.Column(db.String(200), nullable=True, default="100")  # New field
+
 
 @app.route('/')
 def index():
@@ -142,7 +144,8 @@ def get_user_settings():
         return jsonify({
             'curtain_time': user.curtain_time,
             'watering_time': user.watering_time,
-            'temperature': user.temperature
+            'temperature': user.temperature,
+            'humidity': user.humidity  # New field
         })
     return jsonify({'error': 'User not found'}), 404
 
@@ -153,6 +156,7 @@ def set_user_settings():
     curtain_time = data.get('curtain_time')
     watering_time = data.get('watering_time')
     temperature = data.get('temperature')
+    humidity = data.get('humidity')
 
     if token:
         try:
@@ -161,16 +165,20 @@ def set_user_settings():
         except:
             return jsonify({'error': 'Invalid token'}), 403
 
-        if user:
+        if user:    
             if curtain_time:
                 user.curtain_time = curtain_time
             if watering_time:
                 user.watering_time = watering_time
             if temperature:
                 user.temperature = temperature
+            if humidity:
+                user.humidity = humidity
             db.session.commit()
             return jsonify({'message': 'Settings updated successfully'})
     return jsonify({'error': 'Invalid data'}), 400
+
+
 
 @app.route('/api/user_last_action', methods=['POST'])
 def user_last_action():

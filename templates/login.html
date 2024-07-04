@@ -4,20 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вход</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e0f7fa;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #login-title {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #login-loginForm {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        #login-loginForm label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        #login-loginForm input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        #login-loginForm button {
+            width: 100%;
+            padding: 10px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #login-loginForm button:hover {
+            background: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <h1>Вход</h1>
-    <form id="loginForm">
-        <label for="username">Имя пользователя:</label>
-        <input type="text" id="username" name="username">
+    <h1 id="login-title">Вход</h1>
+    <form id="login-loginForm">
+        <label for="login-username">Имя пользователя:</label>
+        <input type="text" id="login-username" name="username">
         <br>
-        <label for="password">Пароль:</label>
-        <input type="password" id="password" name="password">
+        <label for="login-password">Пароль:</label>
+        <input type="password" id="login-password" name="password">
         <br>
-        <button type="submit">Войти</button>
+        <button type="submit" id="login-submitButton">Войти</button>
     </form>
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
+        document.getElementById('login-loginForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const formData = new FormData(this);
             fetch('/login', {

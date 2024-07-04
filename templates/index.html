@@ -5,13 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Панель управления</title>
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
 </head>
 <body>
     <div id="header">
         <h1>Панель управления</h1>
-        <button id="register" onclick="location.href='/register'">РЕГИСТРАЦИЯ</button>
+        <div id="actionbut">
+                    <button id="register" onclick="location.href='/register'">РЕГИСТРАЦИЯ</button>
         <button id="login" onclick="location.href='/login'">ВХОД</button>
         <button id="token" onclick="location.href='/token'">ПОЛУЧИТЬ ТОКЕН (пока доеснт ворк)</button>
+        </div>
+
     </div>
 
     <div id="livingroom">
@@ -21,7 +26,7 @@
         <button id="radiator" onclick="controlDevice('/livingroom/radiator')">Радиатор</button>
         <div>
             <label for="curtain_time">Время закрытия штор:</label>
-            <input type="text" id="curtain_time" name="curtain_time">
+            <input type="time" id="curtain_time" name="curtain_time">
         </div>
     </div>
     <div id="greenhouse">
@@ -29,7 +34,7 @@
         <button id="watering" onclick="controlDevice('/greenhouse/watering')">Полив</button>
         <div>
             <label for="watering_time">Время полива растений:</label>
-            <input type="text" id="watering_time" name="watering_time">
+            <input type="time" id="watering_time" name="watering_time">
         </div>
     </div>
     <div id="balcony">
@@ -49,9 +54,13 @@
     <div id="temperature">
         <h2>Температура в доме</h2>
         <p id="temperature_display">Температура: -- °C</p>
+        <p id="humidity_display">Влажность: -- %</p>
     </div>
 
-    <button onclick="saveSettings()">Сохранить настройки</button>
+    <div id="saveset">
+        <button id="save_button" onclick="saveSettings()">Сохранить настройки</button>
+    </div>
+    
 
     <script>
         function controlDevice(endpoint) {
@@ -104,7 +113,7 @@
             });
         }
 
-        function getTemperature() {
+        function getEnvironmentData() {
             const token = localStorage.getItem('token');
             if (!token) {
                 alert('Пожалуйста сначала ВОЙДИТЕ в систему');
@@ -120,11 +129,14 @@
                     if (data.temperature) {
                         document.getElementById('temperature_display').textContent = `Температура: ${data.temperature} °C`;
                     }
+                    if (data.humidity) {
+                        document.getElementById('humidity_display').textContent = `Влажность: ${data.humidity} %`;
+                    }
                 });
         }
 
-        // Вызов функции для получения температуры при загрузке страницы
-        window.onload = getTemperature;
+        // Вызов функции для получения температуры и влажности при загрузке страницы
+        window.onload = getEnvironmentData;
     </script>
 </body>
 </html>
